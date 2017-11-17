@@ -1,5 +1,6 @@
 /**
- * @desc: 0.44 ～ 0.48.x 版本的rn的 textinput multiline 在android下无法换行
+ * @author zhangweilin
+ * @desc 0.44 ～ 0.48.x 版本的rn的 textinput multiline 在android下无法换行
  * 在以下解决方案下封装
  *
  * This is a workaround for the buggy react-native TextInput multiline on Android.
@@ -26,27 +27,30 @@ export default class MultilineTextInput extends PureComponent {
     }
   }
   static propTypes = {
-    value: PropTypes.string.isRequired,
+    defaultValue: PropTypes.string.isRequired,
     onChangeText: PropTypes.func.isRequired
   }
   constructor (props) {
     super(props)
-    this.state = { selection: { start: 0, end: 0 } }
+    this.state = {
+      selection: { start: 0, end: 0 },
+      text: this.props.defaultValue
+    }
     // Prevent 2 newlines for some Android versions, because they dispatch onSubmitEditing twice
-    this.onSubmitEditing = MultilineTextInput.debounce(this.onSubmitEditing.bind(this), 100)
+    this._onSubmitEditing = MultilineTextInput.debounce(this._onSubmitEditing.bind(this), 100)
   }
   componentWillReceiveProps (props) {
     if (props.selection) {
       this.setState({ selection: props.selection })
     }
   }
-  onSubmitEditing = () => {
-    const { selection } = this.state
-    const { value } = this.props
-    const newText = `${value.slice(0, selection.start)}\n${value.slice(selection.end)}`
+  _onSubmitEditing () {
+    const { selection, text } = this.state
+    const newText = `${text.slice(0, selection.start)}\n${text.slice(selection.end)}`
     this.props.onChangeText(newText)
+    this.setState({text: newText})
     // move cursor only for this case, because in other cases a change of the selection is not allowed by Android
-    if (selection.start !== value.length && selection.start === selection.end) {
+    if (selection.start !== text.length && selection.start === selection.end) {
       const newSelection = {
         selection: {
           start: selection.start + 1,
@@ -60,25 +64,31 @@ export default class MultilineTextInput extends PureComponent {
       }
     }
   }
-  onContentSizeChange = (event) => {
+  _onContentSizeChange = (event) => {
     if (this.props.autoHeight) {
       this.setState({height: event.nativeEvent.contentSize.height})
     }
   }
+  _onChangeText = (text) => {
+    this.setState({text})
+    this.props.onChangeText(text)
+  }
   render () {
-    const { style, ...restProps } = this.props
+    const { style, onChangeText, ...restProps } = this.props
     return (
       <TextInput
-        style={[style, {height: this.state.height}]}
+        {...restProps}
+        style={[style, this.state.height ? {height: Math.max(this.state.height, style.minHeight, style.height)} : {}]}
+        underlineColorAndroid='transparent'
         multiline
         blurOnSubmit={false}
         selection={this.state.selection}
-        value={this.props.value}
+        value={this.state.text}
+        // defaultValue={this.props.defaultValue}
         onSelectionChange={event => this.setState({ selection: event.nativeEvent.selection })}
-        onChangeText={this.props.onChangeText}
-        onSubmitEditing={this.onSubmitEditing}
-        onContentSizeChange={this.onContentSizeChange}
-        {...restProps}
+        onChangeText={this._onChangeText}
+        onSubmitEditing={this._onSubmitEditing}
+        onContentSizeChange={this._onContentSizeChange}
       />
     )
   }
