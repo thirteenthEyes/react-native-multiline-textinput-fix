@@ -1,14 +1,18 @@
-/**
- * @author zhangweilin
- * @desc 0.44 ～ 0.48.x 版本的rn的 textinput multiline 在android下无法换行
- * 在以下解决方案下封装
- *
- * This is a workaround for the buggy react-native TextInput multiline on Android.
- *
- * Can be removed once https://github.com/facebook/react-native/issues/12717
- * is fixed.
- *
- * Example for usage:
- *   <MultilineTextInput defaultValue={this.state.text} onChangeText={text => setState({text})} />
- */
+# bugfix to RN TextInput mutiline can't use soft keybord returnKey to create a newline (RN 安卓的 textinput 组件 mutiline 无法使用软键盘换行的bugfix)
+> 据说是 0.44+ 开始的bug，目前项目是0.47.1仍然存在。临时解决方案来自于某个外国小伙伴用selection位置判别光标位置的奇技淫巧。我在此基础上做了一点封装和完善。
+
+## how to use (怎样使用)
+
+```<MultilineTextInput defaultValue={this.state.text} onChangeText={text => setState({text})} />```
+
+
+## when to fixed (何时被修复)
+
+
+在此[issue](https://github.com/facebook/react-native/issues/12717)被修复
+
+it was fixed at [issue](https://github.com/facebook/react-native/issues/12717)
+
+
+
 
