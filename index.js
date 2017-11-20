@@ -64,7 +64,7 @@ export default class MultilineTextInput extends PureComponent {
     return (
       <TextInput
         {...restProps}
-        style={[style, this.state.height ? {height: Math.max(this.state.height, style.minHeight, style.height)} : {}]}
+        style={[style, this.state.height ? {height: Math.max(this.state.height, style.minHeight || 0, style.height || 0)} : {}]}
         underlineColorAndroid='transparent'
         multiline
         blurOnSubmit={false}
