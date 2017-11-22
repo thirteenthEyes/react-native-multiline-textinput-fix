@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { TextInput } from 'react-native'
+import { TextInput, StyleSheet } from 'react-native'
 
 export default class MultilineTextInput extends PureComponent {
   static debounce (fn, time) {
@@ -20,7 +20,8 @@ export default class MultilineTextInput extends PureComponent {
     super(props)
     this.state = {
       selection: { start: 0, end: 0 },
-      text: this.props.defaultValue
+      text: this.props.defaultValue,
+      height: 0
     }
     // Prevent 2 newlines for some Android versions, because they dispatch onSubmitEditing twice
     this._onSubmitEditing = MultilineTextInput.debounce(this._onSubmitEditing.bind(this), 100)
@@ -60,11 +61,17 @@ export default class MultilineTextInput extends PureComponent {
     this.props.onChangeText(text)
   }
   render () {
-    const { style, onChangeText, ...restProps } = this.props
+    const { style: propsStyle, onChangeText, ...restProps } = this.props
+    let autoHeight = this.state.height
+    if (propsStyle) {
+      const propsStyleObj = StyleSheet.flatten(propsStyle)
+      autoHeight = Math.max(this.state.height, propsStyleObj.minHeight || 0, propsStyleObj.height || 0)
+    }
+
     return (
       <TextInput
         {...restProps}
-        style={[style, this.state.height ? {height: Math.max(this.state.height, style.minHeight || 0, style.height || 0)} : {}]}
+        style={[propsStyle, {height: autoHeight}]}
         underlineColorAndroid='transparent'
         multiline
         blurOnSubmit={false}
