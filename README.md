@@ -11,7 +11,7 @@
 ```<MultilineTextInput defaultValue={this.state.text} onChangeText={text => setState({text})} />```
 
 
-## when to fixed (何时被修复)
+## when is it fixed by official (何时被修复)
 
 
 在此[issue](https://github.com/facebook/react-native/issues/12717)被修复
