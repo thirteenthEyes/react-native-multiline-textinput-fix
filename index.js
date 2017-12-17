@@ -64,23 +64,22 @@ export default class MultilineTextInput extends PureComponent {
   }
   render () {
     const { style: propsStyle, onChangeText, ...restProps } = this.props
-    let autoHeight = this.state.height
+    let computedHeight = this.state.height
     if (propsStyle) {
       // 用StyleSheet格式化props style，以读取minHeight以及height属性
       const propsStyleObj = StyleSheet.flatten(propsStyle)
-      autoHeight = Math.max(this.state.height, propsStyleObj.minHeight || 0, propsStyleObj.height || 0)
+      computedHeight = Math.max(this.state.height, propsStyleObj.minHeight || 0, propsStyleObj.height || 0)
     }
 
     return (
       <TextInput
         {...restProps}
-        style={[propsStyle, {height: autoHeight}]}
+        style={[propsStyle, {height: computedHeight}]}
         underlineColorAndroid='transparent'
         multiline
         blurOnSubmit={false}
         selection={this.state.selection}
         value={this.state.text}
-        // defaultValue={this.props.defaultValue}
         onSelectionChange={event => this.setState({ selection: event.nativeEvent.selection })}
         onChangeText={this._onChangeText}
         onSubmitEditing={this._onSubmitEditing}
