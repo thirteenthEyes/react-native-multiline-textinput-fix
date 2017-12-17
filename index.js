@@ -21,6 +21,7 @@ export default class MultilineTextInput extends PureComponent {
     super(props)
     this.state = {
       selection: { start: 0, end: 0 },
+      // 初始化时使用defaultValue作为本组件的text
       text: this.props.defaultValue,
       height: 0
     }
