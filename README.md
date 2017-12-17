@@ -1,5 +1,5 @@
 # bugfix to RN android mutiline TextInput  can't use soft keybord returnKey to create a newline (RN 安卓的 textinput 组件 mutiline 无法使用软键盘换行的bugfix)
-> 据说是0.44+开始的bug，目前项目是0.47.1仍然存在。临时解决方案来自于某外国小伙伴用selection位置判别光标位置的奇技淫巧。我在此基础上做了一点封装和完善。
+> 据说是0.44+开始的bug，目前项目是0.47.1仍然存在。临时解决方案来自于某外国小伙伴用selection位置判别光标位置的奇技淫巧。我在此基础上做了一点封装和完善。
 
 ## extra feature (额外功能)
 
