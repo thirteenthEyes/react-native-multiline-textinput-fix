@@ -9,6 +9,8 @@ export default class MultilineTextInput extends PureComponent {
       t && clearTimeout(t)
       t = setTimeout(() => {
         fn()
+        clearTimeout(t)
+        t = null
       }, time)
     }
   }
