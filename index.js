@@ -14,7 +14,8 @@ export default class MultilineTextInput extends PureComponent {
   }
   static propTypes = {
     defaultValue: PropTypes.string.isRequired,
-    onChangeText: PropTypes.func.isRequired
+    onChangeText: PropTypes.func.isRequired,
+    allowAutoHeight: PropTypes.boolean // 允许自动调整文本框高度
   }
   constructor (props) {
     super(props)
@@ -23,7 +24,7 @@ export default class MultilineTextInput extends PureComponent {
       text: this.props.defaultValue,
       height: 0
     }
-    // Prevent 2 newlines for some Android versions, because they dispatch onSubmitEditing twice
+    // 防止某些安卓机型触发两次onSubmitEditing
     this._onSubmitEditing = MultilineTextInput.debounce(this._onSubmitEditing.bind(this), 100)
   }
   componentWillReceiveProps (props) {
@@ -36,7 +37,7 @@ export default class MultilineTextInput extends PureComponent {
     const newText = `${text.slice(0, selection.start)}\n${text.slice(selection.end)}`
     this.props.onChangeText(newText)
     this.setState({text: newText})
-    // move cursor only for this case, because in other cases a change of the selection is not allowed by Android
+    // 触发_onSubmitEditing时，当光标位置不在文字末尾且没有选中任何文字时，则将光标后移一个位置
     if (selection.start !== text.length && selection.start === selection.end) {
       const newSelection = {
         selection: {
@@ -52,7 +53,7 @@ export default class MultilineTextInput extends PureComponent {
     }
   }
   _onContentSizeChange = (event) => {
-    if (this.props.autoHeight) {
+    if (!!this.props.allowAutoHeight) {
       this.setState({height: event.nativeEvent.contentSize.height})
     }
   }
@@ -64,6 +65,7 @@ export default class MultilineTextInput extends PureComponent {
     const { style: propsStyle, onChangeText, ...restProps } = this.props
     let autoHeight = this.state.height
     if (propsStyle) {
+      // 用StyleSheet格式化props style，以读取minHeight以及height属性
       const propsStyleObj = StyleSheet.flatten(propsStyle)
       autoHeight = Math.max(this.state.height, propsStyleObj.minHeight || 0, propsStyleObj.height || 0)
     }
