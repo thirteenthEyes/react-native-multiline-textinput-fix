@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { TextInput, StyleSheet } from 'react-native'
 
 export default class MultilineTextInput extends PureComponent {
+
   static debounce (fn, time) {
     let t
     return () => {
@@ -14,11 +15,13 @@ export default class MultilineTextInput extends PureComponent {
       }, time)
     }
   }
+
   static propTypes = {
     defaultValue: PropTypes.string.isRequired,
     onChangeText: PropTypes.func.isRequired,
     allowAutoHeight: PropTypes.boolean // 允许自动调整文本框高度
   }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -30,11 +33,13 @@ export default class MultilineTextInput extends PureComponent {
     // 防止某些安卓机型触发两次onSubmitEditing
     this._onSubmitEditing = MultilineTextInput.debounce(this._onSubmitEditing.bind(this), 100)
   }
+
   componentWillReceiveProps (props) {
     if (props.selection) {
       this.setState({ selection: props.selection })
     }
   }
+
   _onSubmitEditing () {
     const { selection, text } = this.state
     const newText = `${text.slice(0, selection.start)}\n${text.slice(selection.end)}`
@@ -55,15 +60,22 @@ export default class MultilineTextInput extends PureComponent {
       }
     }
   }
-  _onContentSizeChange = (event) => {
+
+  _onContentSizeChange = (evt) => {
     if (!!this.props.allowAutoHeight) {
-      this.setState({height: event.nativeEvent.contentSize.height})
+      this.setState({height: evt.nativeEvent.contentSize.height})
     }
   }
+
   _onChangeText = (text) => {
     this.setState({text})
     this.props.onChangeText(text)
   }
+
+  _onSelectionChange = evt => {
+    this.setState({ selection: evt.nativeEvent.selection })
+  }
+
   render () {
     const { style: propsStyle, onChangeText, ...restProps } = this.props
     let computedHeight = this.state.height
@@ -82,9 +94,9 @@ export default class MultilineTextInput extends PureComponent {
         blurOnSubmit={false}
         selection={this.state.selection}
         value={this.state.text}
-        onSelectionChange={event => this.setState({ selection: event.nativeEvent.selection })}
+        onSelectionChange={this._onSelectionChange}
         onChangeText={this._onChangeText}
-        onSubmitEditing={this._onSubmitEditing}
+        onSubmitEditing={this._onSelectionChange}
         onContentSizeChange={this._onContentSizeChange}
       />
     )
