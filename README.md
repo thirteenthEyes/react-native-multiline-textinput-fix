@@ -26,9 +26,9 @@
 ## when is it fixed by official (何时被修复)
 
 
-在此[issue](https://github.com/facebook/react-native/issues/12717)被修复
+在此[issue](https://github.com/facebook/react-native/issues/12717)被提及
 
-it was fixed at [issue](https://github.com/facebook/react-native/issues/12717)
+it was mentioned at [issue](https://github.com/facebook/react-native/issues/12717)
 
 
 
