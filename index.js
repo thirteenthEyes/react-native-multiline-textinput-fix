@@ -56,7 +56,7 @@ export default class MultilineTextInput extends PureComponent {
       if (this.props.onSelectionChange) {
         this.props.onSelectionChange({ nativeEvent: newSelection })
       } else {
-        this.onSelectionChange({selection: newSelection})
+        this._onSelectionChange({nativeEvent: newSelection})
       }
     }
   }
